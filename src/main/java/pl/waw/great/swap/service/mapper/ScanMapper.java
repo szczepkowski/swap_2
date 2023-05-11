@@ -12,6 +12,7 @@ public class ScanMapper {
                 .id(scan.getId())
                 .ean(scan.getEan())
                 .createdAt(scan.getCreatedAt())
+                .product(scan.getProduct())
                 .build();
     }
 }

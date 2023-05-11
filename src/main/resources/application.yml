@@ -36,3 +36,6 @@ logging:
           mongodb:
             core:
               MongoTemplate: DEBUG
+
+api:
+  product: "http://localhost:8082"

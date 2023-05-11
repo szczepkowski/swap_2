@@ -2,10 +2,21 @@ version: '3.7'
 
 services:
 
+  product-ms:
+    image: goreit/product-ms:latest
+    ports:
+      - "8082:8082"
+    volumes:
+      - product-ms-data:/var/opt
+    networks:
+      - great1
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker, test"
+
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     ports:
-      - 8080:8080
+      - "8080:8080"
     environment:
       - KC_DB=postgres
       - KC_DB_URL=jdbc:postgresql://postgres/keycloak
@@ -30,7 +41,7 @@ services:
     volumes:
       - goreit-postgres-data:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=keycloak
@@ -44,7 +55,7 @@ services:
     volumes:
       - mongodb-data:/data/db
     ports:
-      - 27017:27017
+      - "27017:27017"
     #    command: mongod mongod --logpath /var/logs
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -94,3 +105,4 @@ volumes:
   goreit-postgres-data:
   rabbitmq-data:
   mongodb-data:
+  product-ms-data:
