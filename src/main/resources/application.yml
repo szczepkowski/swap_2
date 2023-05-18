@@ -39,3 +39,4 @@ logging:
 
 api:
   product: "http://localhost:8082"
+  verification: "http://localhost:8083"

@@ -2,6 +2,19 @@ version: '3.7'
 
 services:
 
+  verification-ms:
+    image: goreit/verification-ms:latest
+    ports:
+      - "8083:8083"
+    volumes:
+      - verification-ms-data:/var/opt
+    networks:
+      - great1
+    environment:
+      - "SPRING_PROFILES_ACTIVE=docker, test"
+    depends_on:
+      - postgres
+
   product-ms:
     image: goreit/product-ms:latest
     ports:
@@ -12,6 +25,8 @@ services:
       - great1
     environment:
       - "SPRING_PROFILES_ACTIVE=docker, test"
+    depends_on:
+      - postgres
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
@@ -106,3 +121,4 @@ volumes:
   rabbitmq-data:
   mongodb-data:
   product-ms-data:
+  verification-ms-data:

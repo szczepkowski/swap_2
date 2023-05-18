@@ -11,6 +11,8 @@ import pl.waw.great.swap.domain.Scan;
 import pl.waw.great.swap.repository.ScanRepository;
 import pl.waw.great.swap.service.api.product.ProductClient;
 import pl.waw.great.swap.service.api.product.ProductResponse;
+import pl.waw.great.swap.service.api.verification.VerificationClient;
+import pl.waw.great.swap.service.api.verification.VerificationResponse;
 import pl.waw.great.swap.service.mapper.ScanMapper;
 
 import java.time.LocalDateTime;
@@ -25,12 +27,14 @@ public class ScanService {
 
     private final ScanRepository scanRepository;
     private final ScanMapper scanMapper;
-    private ProductClient productClient;
+    private final ProductClient productClient;
+    private final VerificationClient verificationClient;
 
-    public ScanService(ScanRepository scanRepository, ScanMapper scanMapper, ProductClient productClient) {
+    public ScanService(ScanRepository scanRepository, ScanMapper scanMapper, ProductClient productClient, VerificationClient verificationClient) {
         this.scanRepository = scanRepository;
         this.scanMapper = scanMapper;
         this.productClient = productClient;
+        this.verificationClient = verificationClient;
     }
 
     public ScanView findByEan(String ean) {
@@ -49,11 +53,13 @@ public class ScanService {
             log.info("product api call not found with ean" + ean);
         }
 
+        VerificationResponse verificationResponse = verificationClient.postVerification(ean, scanRequest.getActionType());
+
         Scan scan = Scan.builder()
                 .ean(scanRequest.getEan())
                 .product(product)
                 .id(UUID.randomUUID().toString())
-                .status("VERIFIED")
+                .status(verificationResponse.getVerificationState())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
